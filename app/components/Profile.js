@@ -1,15 +1,12 @@
-import React, { useContext, useEffect } from "react";
-import { useImmer } from "use-immer";
+import React, { useEffect, useContext } from "react";
 import Page from "./Page";
-import Axios from "axios";
-
 import { useParams, NavLink, Routes, Route } from "react-router-dom";
-
+import Axios from "axios";
 import StateContext from "../context/StateContext";
-
 import ProfilePosts from "./ProfilePosts";
 import ProfileFollowers from "./ProfileFollowers";
 import ProfileFollowing from "./ProfileFollowing";
+import { useImmer } from "use-immer";
 
 function Profile() {
   const { username } = useParams();
@@ -40,7 +37,7 @@ function Profile() {
           draft.profileData = response.data;
         });
       } catch (e) {
-        console.log("There was a problem while fetching user profile.");
+        console.log("There was a problem in profile fetch.");
       }
     }
     fetchData();
@@ -48,12 +45,13 @@ function Profile() {
       ourRequest.cancel();
     };
   }, [username]);
-  // Request for following the user
+
   useEffect(() => {
     if (state.startFollowingRequestCount) {
       setState((draft) => {
         draft.followActionLoading = true;
       });
+
       const ourRequest = Axios.CancelToken.source();
 
       async function fetchData() {
@@ -69,7 +67,7 @@ function Profile() {
             draft.followActionLoading = false;
           });
         } catch (e) {
-          console.log("There was a problem in add follow url.");
+          console.log("There was a problem in add follow.");
         }
       }
       fetchData();
@@ -79,12 +77,12 @@ function Profile() {
     }
   }, [state.startFollowingRequestCount]);
 
-  // Request for stop following user
   useEffect(() => {
     if (state.stopFollowingRequestCount) {
       setState((draft) => {
         draft.followActionLoading = true;
       });
+
       const ourRequest = Axios.CancelToken.source();
 
       async function fetchData() {
@@ -100,7 +98,7 @@ function Profile() {
             draft.followActionLoading = false;
           });
         } catch (e) {
-          console.log("There was a problem in remove follower.");
+          console.log("There was a problem in remove follow.");
         }
       }
       fetchData();
@@ -118,7 +116,7 @@ function Profile() {
 
   function stopFollowing() {
     setState((draft) => {
-      draft.stopFollowingRequestCount--;
+      draft.stopFollowingRequestCount++;
     });
   }
 
@@ -129,8 +127,8 @@ function Profile() {
         {state.profileData.profileUsername}
         {appState.loggedIn &&
           !state.profileData.isFollowing &&
-          appState.user.username !== state.profileData.profileUsername &&
-          state.profileData.profileUsername !== "..." && (
+          appState.user.username != state.profileData.profileUsername &&
+          state.profileData.profileUsername != "..." && (
             <button
               onClick={startFollowing}
               disabled={state.followActionLoading}
@@ -141,8 +139,8 @@ function Profile() {
           )}
         {appState.loggedIn &&
           state.profileData.isFollowing &&
-          appState.user.username !== state.profileData.profileUsername &&
-          state.profileData.profileUsername !== "..." && (
+          appState.user.username != state.profileData.profileUsername &&
+          state.profileData.profileUsername != "..." && (
             <button
               onClick={stopFollowing}
               disabled={state.followActionLoading}
