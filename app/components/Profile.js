@@ -40,7 +40,7 @@ function Profile() {
           draft.profileData = response.data;
         });
       } catch (e) {
-        console.log("There was a problem.");
+        console.log("There was a problem while fetching user profile.");
       }
     }
     fetchData();
@@ -69,7 +69,7 @@ function Profile() {
             draft.followActionLoading = false;
           });
         } catch (e) {
-          console.log("There was a problem.");
+          console.log("There was a problem in add follow url.");
         }
       }
       fetchData();
@@ -100,7 +100,7 @@ function Profile() {
             draft.followActionLoading = false;
           });
         } catch (e) {
-          console.log("There was a problem.");
+          console.log("There was a problem in remove follower.");
         }
       }
       fetchData();
